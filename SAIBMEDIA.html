@@ -1,1 +1,950 @@
 
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>MEDIA - Entertainment Platform</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- External Scripts -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+    
+    <style>
+        :root { 
+            --primary: #FFFFFF; 
+            --primary-hover: #E4E4E7;
+            --bg-dark: #000000;
+            --ease-out-smooth: cubic-bezier(0.25, 1, 0.5, 1);
+            --ease-in-out-smooth: cubic-bezier(0.65, 0, 0.35, 1);
+            --spring-smooth: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        
+        * {
+            -webkit-tap-highlight-color: transparent;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body { 
+            background-color: var(--bg-dark); 
+            color: #ffffff; 
+            overflow: hidden; 
+            user-select: none; 
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            font-family: 'Plus Jakarta Sans', 'Prompt', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        } 
+        
+        img { 
+            -webkit-user-drag: none; 
+            user-drag: none; 
+            pointer-events: none; 
+        } 
+        
+        /* Ultra-Smooth Custom Scrollbar */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 5px;
+            height: 5px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 9999px;
+            transition: background 0.4s var(--ease-out-smooth);
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.35);
+        }
+        
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        /* Smooth Glass Panels */
+        .glass-panel {
+            background: rgba(12, 12, 12, 0.82);
+            backdrop-filter: blur(24px) saturate(180%);
+            -webkit-backdrop-filter: blur(24px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
+            transition: border-color 0.4s var(--ease-out-smooth), box-shadow 0.4s var(--ease-out-smooth);
+        }
+
+        .glass-header {
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(30px) saturate(200%);
+            -webkit-backdrop-filter: blur(30px) saturate(200%);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            transition: background-color 0.5s var(--ease-out-smooth), border-color 0.5s var(--ease-out-smooth);
+        }
+
+        /* Enhanced Card Hover (Soft & Fluid) */
+        .card-hover {
+            transition: transform 0.4s var(--ease-out-smooth), box-shadow 0.4s var(--ease-out-smooth), border-color 0.4s var(--ease-out-smooth);
+            will-change: transform;
+        }
+        .card-hover:hover {
+            transform: translateY(-4px);
+            border-color: rgba(255, 255, 255, 0.25) !important;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6);
+        }
+        .card-hover:active {
+            transform: scale(0.98);
+            transition: transform 0.1s ease;
+        }
+
+        /* Silky Smooth Hero Slider Transitions */
+        .slide-item {
+            transition: opacity 1.2s var(--ease-out-smooth), transform 1.2s var(--ease-out-smooth);
+            will-change: opacity, transform;
+            transform: scale(1.02);
+        }
+        .slide-item.opacity-100 {
+            transform: scale(1);
+        }
+
+        /* Smooth Modal Display with Gentle Fade & Scale */
+        .modal-animated {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+            transition: opacity 0.4s var(--ease-out-smooth), visibility 0.4s var(--ease-out-smooth);
+        }
+        .modal-animated.active {
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
+        }
+
+        /* Dynamic Navigation Buttons */
+        .hdr-cat-btn, .cat-btn {
+            transition: all 0.3s var(--ease-out-smooth);
+        }
+
+        /* Smooth Swipe Target */
+        .swipe-target {
+            touch-action: pan-y;
+        }
+
+        /* Shimmer Loading Effect */
+        @keyframes skeleton-shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+
+        .skeleton-shimmer {
+            background: linear-gradient(
+                90deg, 
+                rgba(255, 255, 255, 0.03) 25%, 
+                rgba(255, 255, 255, 0.09) 50%, 
+                rgba(255, 255, 255, 0.03) 75%
+            );
+            background-size: 200% 100%;
+            animation: skeleton-shimmer 2s infinite ease-in-out;
+        }
+
+        .pb-safe { padding-bottom: calc(env(safe-area-inset-bottom, 20px) + 20px); }
+        .pt-safe { padding-top: env(safe-area-inset-top, 0px); }
+    </style>
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: { 
+                        sans: ['"Plus Jakarta Sans"', '"Prompt"', 'sans-serif'] 
+                    },
+                    colors: { 
+                        surface: { 
+                            50: '#09090B', 
+                            100: '#121215', 
+                            200: '#1C1C21',
+                            300: '#27272A'
+                        }, 
+                        darkbg: '#000000' 
+                    }
+                }
+            }
+        };
+    </script>
+</head>
+<body class="antialiased font-sans bg-darkbg text-zinc-100 h-screen w-screen overflow-hidden flex flex-col selection:bg-white selection:text-black">
+
+    <!-- Navigation Header -->
+    <header id="main-header" class="fixed top-0 inset-x-0 z-40 transition-all duration-500 pt-safe glass-header">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between gap-3 sm:gap-6">
+            
+            <!-- Header Brand / Title -->
+            <div class="flex items-center shrink-0 cursor-pointer group" onclick="resetView()">
+                <div class="flex flex-col">
+                    <span class="text-xl sm:text-2xl font-black tracking-widest text-white leading-none group-hover:text-zinc-300 transition-colors duration-300">
+                        MEDIA
+                    </span>
+                    <span class="text-[9px] sm:text-[10px] text-zinc-400 font-semibold tracking-[0.25em] uppercase mt-1 group-hover:text-zinc-200 transition-colors duration-300">
+                        ENTERTAINMENT
+                    </span>
+                </div>
+            </div>
+
+            <!-- Search Bar -->
+            <div class="flex-1 max-w-md relative">
+                <div class="relative w-full">
+                    <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-zinc-400">
+                        <svg class="w-4 h-4 sm:w-5 sm:h-5 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                        </svg>
+                    </div>
+                    <input type="text" id="main-search" placeholder="Search movies, series, animation..." 
+                        class="w-full bg-surface-100/90 hover:bg-surface-100 focus:bg-surface-200 border border-white/10 focus:border-white/40 rounded-full py-2 sm:py-2.5 pl-10 pr-9 text-xs sm:text-sm text-white placeholder-zinc-500 outline-none transition-all duration-400 shadow-inner"
+                        oninput="debouncedSearch(this.value)">
+                    <button onclick="clearSearch()" id="main-clear" class="absolute inset-y-0 right-0 pr-3 flex items-center text-zinc-400 hover:text-white transition-opacity duration-300 opacity-0 pointer-events-none">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Desktop Category Pills -->
+            <div class="hidden md:flex items-center gap-1.5 shrink-0 bg-surface-100/60 p-1 rounded-full border border-white/10 backdrop-blur-md">
+                <button onclick="filterCategory('All')" class="hdr-cat-btn active px-4 py-1.5 rounded-full text-xs font-semibold bg-white text-black shadow-md shadow-white/10">All</button>
+                <button onclick="filterCategory('Movies')" class="hdr-cat-btn px-4 py-1.5 rounded-full text-xs font-semibold text-zinc-400 hover:text-white">Movies</button>
+                <button onclick="filterCategory('Series')" class="hdr-cat-btn px-4 py-1.5 rounded-full text-xs font-semibold text-zinc-400 hover:text-white">Series</button>
+                <button onclick="filterCategory('Cartoons')" class="hdr-cat-btn px-4 py-1.5 rounded-full text-xs font-semibold text-zinc-400 hover:text-white">Animation</button>
+            </div>
+
+        </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main id="main-container" class="flex-1 overflow-y-auto custom-scrollbar w-full pt-20 sm:pt-24 pb-safe">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
+            
+            <!-- Hero Slider -->
+            <div id="hero-slider-container" class="swipe-target relative w-full mb-8 rounded-2xl overflow-hidden border border-white/10 glass-panel shadow-2xl group select-none">
+                <div id="hero-slides" class="relative w-full h-[260px] sm:h-[360px] lg:h-[440px] overflow-hidden">
+                    <!-- Slides injected dynamically -->
+                </div>
+
+                <button onclick="moveSlide(-1)" class="absolute left-3 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-black/70 hover:bg-white hover:text-black text-white backdrop-blur-md border border-white/20 flex items-center justify-center transition-all duration-400 opacity-0 group-hover:opacity-100 focus:opacity-100 active:scale-90">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"/></svg>
+                </button>
+                <button onclick="moveSlide(1)" class="absolute right-3 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-black/70 hover:bg-white hover:text-black text-white backdrop-blur-md border border-white/20 flex items-center justify-center transition-all duration-400 opacity-0 group-hover:opacity-100 focus:opacity-100 active:scale-90">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/></svg>
+                </button>
+
+                <div id="hero-dots" class="absolute bottom-4 left-1/2 -translate-x-1/2 z-20 flex items-center gap-2 px-3 py-1.5 rounded-full bg-black/60 backdrop-blur-md border border-white/10">
+                    <!-- Dots injected dynamically -->
+                </div>
+            </div>
+
+            <!-- Mobile Category Filter Bar -->
+            <div class="flex md:hidden items-center gap-2 overflow-x-auto no-scrollbar pb-4 mb-2">
+                <button onclick="filterCategory('All')" class="cat-btn active px-4 py-1.5 rounded-full text-xs font-medium transition-all shrink-0 bg-white text-black shadow-md shadow-white/10">All</button>
+                <button onclick="filterCategory('Movies')" class="cat-btn px-4 py-1.5 rounded-full text-xs font-medium transition-all shrink-0 bg-surface-100 hover:bg-surface-200 text-zinc-300 border border-white/10">Movies</button>
+                <button onclick="filterCategory('Series')" class="cat-btn px-4 py-1.5 rounded-full text-xs font-medium transition-all shrink-0 bg-surface-100 hover:bg-surface-200 text-zinc-300 border border-white/10">Series</button>
+                <button onclick="filterCategory('Cartoons')" class="cat-btn px-4 py-1.5 rounded-full text-xs font-medium transition-all shrink-0 bg-surface-100 hover:bg-surface-200 text-zinc-300 border border-white/10">Animation</button>
+            </div>
+
+            <!-- Trending Section -->
+            <div id="hot-section" class="mb-10">
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="text-base sm:text-lg lg:text-xl font-bold text-white flex items-center gap-2.5 tracking-wide">
+                        <span class="w-2.5 h-2.5 rounded-full bg-white animate-pulse"></span>
+                        <span class="font-extrabold uppercase tracking-wider text-white">
+                            Trending Now
+                        </span>
+                        <span class="text-[10px] sm:text-xs bg-white/10 text-white border border-white/20 px-2.5 py-0.5 rounded-full font-bold uppercase tracking-widest">
+                            Top Pick
+                        </span>
+                    </h2>
+                    <div class="hidden sm:flex items-center gap-2">
+                        <button onclick="scrollHotRow(-1)" class="w-8 h-8 rounded-full bg-surface-100 hover:bg-surface-200 border border-white/10 flex items-center justify-center text-zinc-300 hover:text-white transition-all duration-300 active:scale-90 shadow-md">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+                        </button>
+                        <button onclick="scrollHotRow(1)" class="w-8 h-8 rounded-full bg-surface-100 hover:bg-surface-200 border border-white/10 flex items-center justify-center text-zinc-300 hover:text-white transition-all duration-300 active:scale-90 shadow-md">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                        </button>
+                    </div>
+                </div>
+
+                <div id="hot-row-track" class="flex gap-4 overflow-x-auto custom-scrollbar pb-4 snap-x snap-mandatory">
+                    <!-- Cards rendered dynamically -->
+                </div>
+            </div>
+
+            <!-- Section Title -->
+            <div class="flex items-center justify-between mb-4 sm:mb-6">
+                <h2 id="section-title" class="text-base sm:text-lg lg:text-xl font-bold text-white flex items-center gap-2.5 tracking-wide">
+                    <span class="w-1.5 h-5 bg-white rounded-full"></span>
+                    All Titles
+                </h2>
+                <span id="media-count" class="text-xs text-zinc-400 font-medium bg-surface-100 px-3.5 py-1 rounded-full border border-white/10 shadow-sm">0 items</span>
+            </div>
+
+            <!-- Media Grid Layout -->
+            <div id="media-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3.5 sm:gap-5 lg:gap-6">
+                <!-- Content or Skeleton Loading -->
+            </div>
+        </div>
+    </main>
+
+    <!-- Video Player Modal -->
+    <div id="video-modal" class="modal-animated fixed inset-0 z-50 bg-black/95 backdrop-blur-2xl flex flex-col lg:flex-row overflow-hidden">
+        
+        <!-- Player Container -->
+        <div class="flex-1 flex flex-col h-[38vh] sm:h-[48vh] lg:h-full bg-black relative">
+            
+            <!-- Modal Header Overlay -->
+            <div class="absolute top-0 inset-x-0 z-30 p-3 sm:p-5 flex items-center justify-between bg-gradient-to-b from-black/90 via-black/40 to-transparent">
+                <button onclick="closeVideo()" class="p-2 sm:p-2.5 rounded-full bg-zinc-900/80 hover:bg-white hover:text-black text-white backdrop-blur-md border border-white/15 transition-all duration-300 active:scale-90 flex items-center justify-center">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                </button>
+                <h3 id="vm-title" class="text-xs sm:text-sm lg:text-base font-semibold text-white truncate px-3 max-w-[70%] text-center tracking-wide">Connecting...</h3>
+                <div class="w-9 sm:w-10"></div>
+            </div>
+
+            <!-- Video Display Screen -->
+            <div class="relative flex-1 w-full h-full flex items-center justify-center bg-black overflow-hidden">
+                <div id="yt-player-container" class="w-full h-full"></div>
+                <video id="std-player" class="w-full h-full hidden object-contain outline-none" controls playsinline controlsList="nodownload"></video>
+                
+                <!-- Unified Loading & Unavailable Overlay Status -->
+                <div id="video-status-overlay" class="absolute inset-0 flex flex-col items-center justify-center bg-black/95 p-6 text-center z-20 backdrop-blur-md transition-opacity duration-500">
+                    <div class="relative w-14 h-14 mb-4 flex items-center justify-center">
+                        <div class="absolute inset-0 rounded-full border-2 border-white/10 border-t-white animate-spin"></div>
+                        <div class="w-8 h-8 rounded-full bg-white/5 border border-white/20 flex items-center justify-center">
+                            <span class="w-2 h-2 rounded-full bg-white animate-ping"></span>
+                        </div>
+                    </div>
+                    <h4 id="status-main-text" class="text-sm sm:text-base font-bold text-white mb-1.5 tracking-wide">
+                        Loading Stream...
+                    </h4>
+                    <p id="status-sub-text" class="text-xs text-zinc-400 font-normal max-w-xs leading-relaxed">
+                        Please wait a moment or try another server if playback fails.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sidebar Episodes -->
+        <div class="w-full lg:w-96 h-[62vh] sm:h-[52vh] lg:h-full bg-surface-50 border-t lg:border-t-0 lg:border-l border-white/10 flex flex-col shrink-0">
+            <div class="p-4 bg-surface-100 border-b border-white/10 flex items-center justify-between shrink-0">
+                <div class="flex items-center gap-2 text-white font-bold text-sm sm:text-base tracking-wide">
+                    <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7"></path></svg>
+                    Episodes List
+                </div>
+                <span id="vm-count" class="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-white/10 text-white border border-white/20">0 Episodes</span>
+            </div>
+            
+            <div id="vm-episodes" class="flex-1 overflow-y-auto p-3 sm:p-4 space-y-2.5 custom-scrollbar pb-safe">
+                <!-- Generated dynamically -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const ALL_MEDIA_SOURCE = [
+            { id: 83, title: "Hello (2026)", category: "Cartoons", isHot: true, hotBadge: "TOP 1", cover: "https://m.media-amazon.com/images/M/MV5BYjkwODE1ZmYtMTBjZS00MmQ2LTk3NDYtNzEzNjE0MTZiZjVmXkEyXkFqcGc@._V1_.jpg", url: "https://stream.mux.com/mog01ry3YgwkpALNETuKrHHZQE9QYHMNw3ynq00jGlRLc.m3u8?token=eyJhbGciOiJSUzI1NiIsImtpZCI6Ik5CY3o3Sk5RcUNmdDdWcmo5MWhra2lEY3Vyc2xtRGNmSU1oSFUzallZMDI0IiwidHlwIjoiSldUIn0.eyJzdWIiOiJtb2cwMXJ5M1lnd2twQUxORVR1S3JISFpRRTlRWUhNTnczeW5xMDBqR2xSTGMiLCJleHAiOjE3ODI4MDI4MDAsImF1ZCI6InYiLCJwbGF5YmFja19yZXN0cmljdGlvbl9pZCI6IklyMDJGbXFzcVVuTUlwRXFIODlNZGx2V2ExNVF3T282ZENuZWxDdFNJOVlJIn0.kdrrceTrKFW-A1-TU-jCggdY61VwEUuRu8aH_yo0vkJjm_KXJ3yKTUrIMbYAMgCyx5LZZlhq780aIQvsALme-VCsgxA9Ezc4ZWaqskGGfL2npp_1HcOsNMRl4nHJplzah-OT0XYjMEoPMHSHd4OzrSwpe3aa8EhhlsIKBeQMWfCRkaw11L6iqnGJzzfBiqu1VOil3EqH2VfhQ61M7rApScIh2oyV4VCn48Svl0HX7LbEFJ791o5_Xtj0K2QtC6pXVtFjq_6whA_tuPyGo1K9l3q6F1UuzFn5t4nnzWbjLW5L92IrdZdk3gMwaYOqcGiQEabE2zdGf2GsqedDyvWrAg" },
+            { 
+                id: 82, title: "Tuag Vim Nyiaj", category: "Movies", isHot: true, hotBadge: "TOP 2", cover: "https://i.ytimg.com/vi/3S8omk1qGiY/maxresdefault.jpg", 
+                episodes: [
+                    { name: "Tuag Vim Nyiaj 1", url: "https://youtu.be/3S8omk1qGiY?si=-QHMO1IavVGI0sp8" }, 
+                    { name: "Tuag Vim Nyiaj 2", url: "https://youtu.be/q6HYlv4VtHw?si=p1voD3SvWtb0_sZD" },
+                    { name: "Tuag Vim Nyiaj 3", url: "https://youtu.be/B46bz9WCbwY?si=O37ApKSeQHpSxhMe" },
+                    { name: "Tuag Vim Nyiaj 4", url: "https://youtu.be/jef8q7_g4Hw?si=qpv_3Gz8h7K75Rgx" },
+                    { name: "Tuag Vim Nyiaj 5", url: "https://youtu.be/fWaAQLc2Oto?si=rhtGVSpRFHxkAIND" },
+                    { name: "Tuag Vim Nyiaj 6", url: "https://youtu.be/XVAJaIsPG5g?si=mksg14abByUe__RG" },
+                    { name: "Tuag Vim Nyiaj 7", url: "https://youtu.be/7PfbTmGLr8Y?si=knQN5JkPZl-pjEJr" }, 
+                    { name: "Tuag Vim Nyiaj 8", url: "https://youtu.be/VbLQ3p7YB1E?si=hI4RbVwG-H82s-MU" },
+                    { name: "Tuag Vim Nyiaj 9", url: "https://youtu.be/k88jLTs8sUI?si=NBhjoJJbM4jSHs5z" },
+                    { name: "Tuag Vim Nyiaj 10", url: "https://youtu.be/CI6ANcrgjfw?si=stzbcTxeyNbp_Can" },
+                    { name: "Tuag Vim Nyiaj 11", url: "https://youtu.be/oqladAS94AA?si=hdI5SX9Ms4CcS1_M" },
+                    { name: "Tuag Vim Nyiaj 12", url: "https://youtu.be/_2yzx09dEGw?si=aM9x3pxgiFi8F5D-" },
+                    { name: "Tuag Vim Nyiaj 13", url: "https://youtu.be/1CHd8F2vSAY?si=vjbReHX_hdExTp4k" },
+                    { name: "Tuag Vim Nyiaj 14", url: "https://youtu.be/FqdmwDNG7x8?si=5lzgT0hXLVBnGLF4" },
+                    { name: "Tuag Vim Nyiaj 15", url: "https://youtu.be/8wsdAwe8o3w?si=-j8N09U1VHYG0mun" }
+                ] 
+            },
+            { 
+                id: 81, title: "Koj Dag Kuv Tuag", category: "Movies", isHot: true, hotBadge: "TOP 3", cover: "https://i.ytimg.com/vi/Rjx8bWqg22s/sddefault.jpg", 
+                episodes: [
+                    { name: "Koj Dag Kuv Tuag 1", url: "https://youtu.be/sKOu7_440xI?si=H6wSYNWCuMtIXSGe" }, 
+                    { name: "Koj Dag Kuv Tuag 2", url: "https://youtu.be/4rdKtBnw7pk?si=Un96CUudNETowfNq" },
+                    { name: "Koj Dag Kuv Tuag 3", url: "https://youtu.be/1nCV2f7AiMc?si=rwyJIOpfEKS1Qk2F" },
+                    { name: "Koj Dag Kuv Tuag 4", url: "https://youtu.be/Rjx8bWqg22s?si=flb0vjmCDXFRNnHM" },
+                    { name: "Koj Dag Kuv Tuag 5", url: "https://youtu.be/z8UIfzKO58w?si=i_MyYY_qEwA_lVjy" },
+                    { name: "Koj Dag Kuv Tuag 6", url: "https://youtu.be/eaZg-VxAe04?si=jVp8xAtvjLFCUlu1" }
+                ] 
+            },
+            { id: 79, title: "Our House (2025)", category: "Movies", isHot: true, hotBadge: "TOP 4", cover: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRs5CGnI6_9tpi8Iu4xJR8LdQYVO16hM_lOrqx7vW_-smZWrQJBsZzh9gEr&s=10", url: "https://main.123hd-serie.com/m3u8/e6243ae2f1ae31212e7ec4a7/e6243ae2f1ae31212e7ec4a7438.m3u8" },
+            { id: 78, title: "Swords of Legends Soul and Blade (2026)", category: "Movies", isHot: true, hotBadge: "TOP 5", cover: "https://pic5.iqiyipic.com/image/20260319/9f/e8/v_194303010_m_601_th_260_360.jpg", url: "https://main.123hd-serie.com/m3u8/cbfd8ceba0c1ba803f2986ff/cbfd8ceba0c1ba803f2986ff438.m3u8" },
+            { id: 77, title: "The Wailing (2016)", category: "Movies", isHot: true, hotBadge: "TOP 6", cover: "https://img.online-station.net/image_content/2023/06/%E0%B8%AB%E0%B8%99%E0%B8%B1%E0%B8%87%E0%B9%80%E0%B8%81%E0%B8%B2%E0%B8%AB%E0%B8%A5%E0%B8%B5_The-Wailing.jpg", url: "https://hot.24playerhd.com/ioshls/10e8a312342955f759f43d7fdac893bb/10e8a312342955f759f43d7fdac893bb.m3u8" },
+            { id: 76, title: "The Kings Warden (2026)", category: "Cartoons", cover: "https://m.media-amazon.com/images/M/MV5BYjkwODE1ZmYtMTBjZS00MmQ2LTk3NDYtNzEzNjE0MTZiZjVmXkEyXkFqcGc@._V1_.jpg", url: "https://main.24playerhd.com/m3u8/d7120d536a161856a50848a0/d7120d536a161856a50848a0438.m3u8" },
+            { id: 75, title: "Colony (2026)", category: "Movies", cover: "https://m.media-amazon.com/images/M/MV5BMDgwNzhmMjItMDhlYi00ODdlLWI1NjUtZDgxZGMzMGU5MmM4XkEyXkFqcGc@._V1_.jpg", url: "https://main.24playerhd.com/m3u8/eded5de9785d301e6fd7f76a/eded5de9785d301e6fd7f76a438.m3u8" },
+            { id: 74, title: "I Am Frankelda (2026)", category: "Cartoons", cover: "https://m.media-amazon.com/images/M/MV5BNDc3OTYxOTQtYzNkMy00YzQ5LWJlM2MtZDcwYTliZThkMWM0XkEyXkFqcGc@._V1_.jpg", url: "https://main.24playerhd.com/m3u8/c74e8ab2b2742dd0043864d0/c74e8ab2b2742dd0043864d0438.m3u8" },
+            { id: 73, title: "Milky Subway The Galactic Limited Express to the Theater", category: "Cartoons", cover: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR8nkIGwOAxSVv8lOAwCsHNrJqTlvGTcufF9CZfHz2_-LbLdwhMS4kqnP3w&s=10", url: "https://main.24playerhd.com/m3u8/f02dae7c6a90e354b30edb84/f02dae7c6a90e354b30edb84438.m3u8" },
+            { id: 72, title: "Prince, Don't Go Away", category: "Series", cover: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR8nkIGwOAxSVv8lOAwCsHNrJqTlvGTcufF9CZfHz2_-LbLdwhMS4kqnP3w&s=10", url: "https://youtu.be/V-GacOudC1k?si=fL1uR9IBVwZZq1dz" },
+            { id: 71, title: "I Swear I Will Leave My Husband", category: "Series", cover: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTUjC65nvi-ru7R_4aWhAsD2lB5iSyrZ_BSZnJ86-JZrQ&s=10", url: "https://youtu.be/Wjv43iLPsr8?si=OIS6eRHOQNOh_Us3" },
+            { id: 69, title: "Hmong kids nursery rhyme songs", category: "Cartoons", cover: "https://i.ytimg.com/vi/SwwDrxbZVuM/maxresdefault.jpg", url: "https://youtu.be/VdF8qw5QAWs?si=EfTXaMf1BjvYPZS8" },
+            { id: 68, title: "Tus Qav & Tus Tsov", category: "Cartoons", cover: "https://i.ytimg.com/vi/_1CxpJBHJd0/maxresdefault.jpg", url: "https://youtu.be/3RXVXYpafm8?si=sdFG-ED6AHIyq2JZ" }
+        ];
+
+        function shuffleArray(array) {
+            const shuffled = [...array];
+            for (let i = shuffled.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+            }
+            return shuffled;
+        }
+
+        const randomizedList = shuffleArray(ALL_MEDIA_SOURCE);
+
+        const STATE = {
+            items: randomizedList,
+            activeCategory: 'All',
+            searchQuery: '',
+            currentPlayingUrl: '',
+            currentSlide: 0,
+            featuredItems: shuffleArray(ALL_MEDIA_SOURCE).slice(0, 5),
+            hotItems: shuffleArray(ALL_MEDIA_SOURCE.filter(i => i.isHot)),
+            sliderInterval: null,
+            isLoading: true
+        };
+
+        /* --- Skeletons --- */
+        function renderHeroSkeleton() {
+            const slidesWrapper = document.getElementById('hero-slides');
+            if(!slidesWrapper) return;
+            slidesWrapper.innerHTML = `
+                <div class="absolute inset-0 skeleton-shimmer flex flex-col justify-end p-6 sm:p-10 lg:p-12">
+                    <div class="w-24 h-5 rounded-full bg-white/10 mb-3 skeleton-shimmer"></div>
+                    <div class="w-3/4 sm:w-1/2 h-8 sm:h-10 rounded-lg bg-white/10 mb-4 skeleton-shimmer"></div>
+                    <div class="w-32 h-10 rounded-full bg-white/10 skeleton-shimmer"></div>
+                </div>
+            `;
+        }
+
+        function renderGridSkeleton(count = 12) {
+            const grid = document.getElementById('media-grid');
+            if(!grid) return;
+            grid.innerHTML = Array(count).fill(0).map(() => `
+                <div class="bg-surface-100 rounded-xl overflow-hidden border border-white/5 relative flex flex-col h-full animate-pulse">
+                    <div class="aspect-[2/3] w-full skeleton-shimmer relative">
+                        <div class="absolute top-2.5 right-2.5 w-12 h-4 rounded-md bg-white/10"></div>
+                    </div>
+                    <div class="p-3 space-y-2">
+                        <div class="h-3.5 bg-white/10 rounded-md w-5/6 skeleton-shimmer"></div>
+                        <div class="h-3.5 bg-white/10 rounded-md w-1/2 skeleton-shimmer"></div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderEpisodesSkeleton(count = 5) {
+            const epList = document.getElementById('vm-episodes');
+            if(!epList) return;
+            epList.innerHTML = Array(count).fill(0).map(() => `
+                <div class="w-full h-12 bg-surface-100 border border-white/5 rounded-xl p-3 flex items-center justify-between skeleton-shimmer">
+                    <div class="h-4 bg-white/10 rounded-md w-2/3"></div>
+                    <div class="w-4 h-4 bg-white/10 rounded-full"></div>
+                </div>
+            `).join('');
+        }
+
+        /* --- Trending Row Render --- */
+        function renderHotRow() {
+            const track = document.getElementById('hot-row-track');
+            const hotSection = document.getElementById('hot-section');
+            if(!track || !hotSection) return;
+
+            const query = STATE.searchQuery.toLowerCase().trim();
+            const filteredHot = STATE.hotItems.filter(item => {
+                const matchesCat = STATE.activeCategory === 'All' || item.category === STATE.activeCategory;
+                const matchesSearch = item.title.toLowerCase().includes(query) || item.category.toLowerCase().includes(query);
+                return matchesCat && matchesSearch;
+            });
+
+            if (filteredHot.length === 0) {
+                hotSection.style.display = 'none';
+                return;
+            } else {
+                hotSection.style.display = 'block';
+            }
+
+            track.innerHTML = filteredHot.map((item, index) => `
+                <div onclick="openVideo(${item.id})" class="shrink-0 w-36 sm:w-44 lg:w-48 snap-start cursor-pointer group card-hover">
+                    <div class="bg-surface-100 rounded-xl overflow-hidden border border-white/10 relative flex flex-col h-full shadow-xl">
+                        <div class="aspect-[2/3] w-full overflow-hidden relative bg-surface-200">
+                            <img src="${item.cover}" alt="${item.title}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" loading="lazy" onerror="this.src='https://placehold.co/400x600/121215/FFFFFF?text=MEDIA'">
+                            <div class="absolute inset-0 bg-gradient-to-t from-surface-100 via-transparent to-transparent opacity-80"></div>
+                            
+                            <!-- Rank Badge -->
+                            <div class="absolute top-2 left-2 px-2 py-0.5 rounded-md bg-white text-black text-[10px] sm:text-xs font-black tracking-wider uppercase shadow-md flex items-center">
+                                ${item.hotBadge || `TOP ${index + 1}`}
+                            </div>
+
+                            <!-- Category Badge -->
+                            <span class="absolute top-2 right-2 px-1.5 py-0.5 rounded bg-black/80 backdrop-blur-md border border-white/20 text-[9px] font-semibold text-zinc-300 uppercase shadow">
+                                ${item.category}
+                            </span>
+
+                            <!-- Play Icon Overlay -->
+                            <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 bg-black/40 backdrop-blur-[2px] transition-opacity duration-300">
+                                <div class="w-11 h-11 rounded-full bg-white text-black flex items-center justify-center shadow-2xl transform scale-90 group-hover:scale-100 transition-transform duration-300">
+                                    <svg class="w-5 h-5 ml-0.5 fill-current" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="p-3 flex-1 flex flex-col justify-between">
+                            <h3 class="text-xs sm:text-sm font-bold text-zinc-100 group-hover:text-white transition-colors duration-300 line-clamp-2 leading-snug">
+                                ${item.title}
+                            </h3>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function scrollHotRow(direction) {
+            const track = document.getElementById('hot-row-track');
+            if(track) {
+                const scrollAmount = track.clientWidth * 0.75;
+                track.scrollBy({ left: direction * scrollAmount, behavior: 'smooth' });
+            }
+        }
+
+        /* --- Hero Slider Controller --- */
+        function initHeroSlider() {
+            const slidesWrapper = document.getElementById('hero-slides');
+            const dotsWrapper = document.getElementById('hero-dots');
+            if (!slidesWrapper || !dotsWrapper) return;
+
+            slidesWrapper.innerHTML = STATE.featuredItems.map((item, idx) => `
+                <div class="slide-item absolute inset-0 ${idx === 0 ? 'opacity-100 z-10 pointer-events-auto' : 'opacity-0 z-0 pointer-events-none'}">
+                    <img src="${item.cover}" alt="${item.title}" class="w-full h-full object-cover object-center" onerror="this.src='https://placehold.co/1200x600/121215/FFFFFF?text=FEATURED'">
+                    <div class="absolute inset-0 bg-gradient-to-t from-darkbg via-darkbg/50 to-transparent"></div>
+                    <div class="absolute inset-0 bg-gradient-to-r from-darkbg/90 via-darkbg/40 to-transparent"></div>
+                    
+                    <div class="absolute bottom-0 inset-x-0 p-6 sm:p-10 lg:p-12 flex flex-col justify-end max-w-2xl">
+                        <span class="inline-block px-3.5 py-1 rounded-full bg-white backdrop-blur-md text-black font-extrabold text-[10px] sm:text-xs uppercase tracking-widest w-max mb-2 sm:mb-3 shadow-lg">
+                            Featured ${item.category}
+                        </span>
+                        <h1 class="text-xl sm:text-3xl lg:text-4xl font-extrabold text-white tracking-tight leading-tight mb-3 sm:mb-4 drop-shadow-md">
+                            ${item.title}
+                        </h1>
+                        <div class="flex items-center gap-3">
+                            <button onclick="openVideo(${item.id})" class="px-5 py-2.5 rounded-full bg-white hover:bg-zinc-200 text-black font-bold text-xs sm:text-sm flex items-center gap-2 transition-all duration-300 shadow-xl hover:scale-105 active:scale-95">
+                                <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                                Watch Now
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+
+            dotsWrapper.innerHTML = STATE.featuredItems.map((_, idx) => `
+                <button onclick="goToSlide(${idx})" class="dot-btn h-2 rounded-full transition-all duration-500 ease-out ${idx === 0 ? 'w-6 bg-white' : 'w-2 bg-white/30 hover:bg-white/60'}"></button>
+            `).join('');
+
+            setupSwipeGestures();
+            startSliderAutoPlay();
+        }
+
+        function updateSlideUI() {
+            const slides = document.querySelectorAll('.slide-item');
+            const dots = document.querySelectorAll('.dot-btn');
+
+            slides.forEach((slide, idx) => {
+                if (idx === STATE.currentSlide) {
+                    slide.classList.remove('opacity-0', 'z-0', 'pointer-events-none');
+                    slide.classList.add('opacity-100', 'z-10', 'pointer-events-auto');
+                } else {
+                    slide.classList.remove('opacity-100', 'z-10', 'pointer-events-auto');
+                    slide.classList.add('opacity-0', 'z-0', 'pointer-events-none');
+                }
+            });
+
+            dots.forEach((dot, idx) => {
+                if (idx === STATE.currentSlide) {
+                    dot.classList.remove('w-2', 'bg-white/30');
+                    dot.classList.add('w-6', 'bg-white');
+                } else {
+                    dot.classList.remove('w-6', 'bg-white');
+                    dot.classList.add('w-2', 'bg-white/30');
+                }
+            });
+        }
+
+        function moveSlide(direction) {
+            clearInterval(STATE.sliderInterval);
+            STATE.currentSlide = (STATE.currentSlide + direction + STATE.featuredItems.length) % STATE.featuredItems.length;
+            updateSlideUI();
+            startSliderAutoPlay();
+        }
+
+        function goToSlide(index) {
+            clearInterval(STATE.sliderInterval);
+            STATE.currentSlide = index;
+            updateSlideUI();
+            startSliderAutoPlay();
+        }
+
+        function startSliderAutoPlay() {
+            clearInterval(STATE.sliderInterval);
+            STATE.sliderInterval = setInterval(() => {
+                STATE.currentSlide = (STATE.currentSlide + 1) % STATE.featuredItems.length;
+                updateSlideUI();
+            }, 6000);
+        }
+
+        function setupSwipeGestures() {
+            const container = document.getElementById('hero-slider-container');
+            if(!container) return;
+
+            let touchStartX = 0;
+            let touchEndX = 0;
+
+            container.addEventListener('touchstart', e => {
+                touchStartX = e.changedTouches[0].screenX;
+            }, { passive: true });
+
+            container.addEventListener('touchend', e => {
+                touchEndX = e.changedTouches[0].screenX;
+                handleSwipe();
+            }, { passive: true });
+
+            function handleSwipe() {
+                const diff = touchStartX - touchEndX;
+                if (Math.abs(diff) > 40) {
+                    if (diff > 0) moveSlide(1);
+                    else moveSlide(-1);
+                }
+            }
+        }
+
+        function debounce(func, wait) {
+            let timeout;
+            return function(...args) {
+                clearTimeout(timeout);
+                timeout = setTimeout(() => func.apply(this, args), wait);
+            };
+        }
+
+        /* --- Grid Rendering --- */
+        function renderGrid(showSkeletonFirst = false) {
+            const grid = document.getElementById('media-grid');
+            const countEl = document.getElementById('media-count');
+            if(!grid) return;
+
+            renderHotRow();
+
+            if (showSkeletonFirst) {
+                renderGridSkeleton();
+                setTimeout(() => {
+                    executeGridRender(grid, countEl);
+                }, 300);
+            } else {
+                executeGridRender(grid, countEl);
+            }
+        }
+
+        function executeGridRender(grid, countEl) {
+            const query = STATE.searchQuery.toLowerCase().trim();
+            const filtered = STATE.items.filter(item => {
+                const matchesCat = STATE.activeCategory === 'All' || item.category === STATE.activeCategory;
+                const matchesSearch = item.title.toLowerCase().includes(query) || item.category.toLowerCase().includes(query);
+                return matchesCat && matchesSearch;
+            });
+
+            countEl.innerText = `${filtered.length} items`;
+
+            if(filtered.length === 0) {
+                grid.innerHTML = `
+                    <div class="col-span-full py-16 text-center animate-fade-in">
+                        <div class="w-16 h-16 mx-auto mb-3 text-zinc-600 border border-zinc-800 rounded-full flex items-center justify-center">
+                            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                        </div>
+                        <p class="text-sm text-zinc-400 font-medium">No results found matching your query.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            grid.innerHTML = filtered.map((item) => `
+                <div onclick="openVideo(${item.id})" class="group cursor-pointer card-hover">
+                    <div class="bg-surface-100 rounded-xl overflow-hidden border border-white/10 relative flex flex-col h-full shadow-lg">
+                        <div class="aspect-[2/3] w-full overflow-hidden relative bg-surface-200">
+                            <img src="${item.cover}" alt="${item.title}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" loading="lazy" onerror="this.src='https://placehold.co/400x600/121215/FFFFFF?text=MEDIA'">
+                            <div class="absolute inset-0 bg-gradient-to-t from-surface-100 via-transparent to-transparent opacity-85"></div>
+                            
+                            <!-- Category Badge -->
+                            <span class="absolute top-2.5 right-2.5 px-2 py-0.5 rounded-md bg-black/80 backdrop-blur-md border border-white/10 text-[10px] font-semibold text-zinc-200 tracking-wider uppercase shadow-md">
+                                ${item.category}
+                            </span>
+
+                            ${item.isHot ? `
+                                <span class="absolute top-2.5 left-2.5 px-2 py-0.5 rounded-md bg-white text-black text-[10px] font-extrabold tracking-wider uppercase shadow-md">
+                                    HOT
+                                </span>
+                            ` : ''}
+
+                            <!-- Play Overlay -->
+                            <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 bg-black/40 backdrop-blur-[2px] transition-opacity duration-300">
+                                <div class="w-11 h-11 rounded-full bg-white text-black flex items-center justify-center shadow-2xl transform scale-90 group-hover:scale-100 transition-transform duration-300">
+                                    <svg class="w-5 h-5 ml-0.5 fill-current" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="p-3 flex-1 flex flex-col justify-between">
+                            <h3 class="text-xs sm:text-sm font-semibold text-zinc-200 group-hover:text-white transition-colors duration-300 line-clamp-2 leading-snug">
+                                ${item.title}
+                            </h3>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function filterCategory(cat) {
+            STATE.activeCategory = cat;
+            
+            document.querySelectorAll('.hdr-cat-btn').forEach(btn => {
+                if(btn.innerText.includes(cat) || (cat === 'Cartoons' && btn.innerText.includes('Animation'))) {
+                    btn.className = 'hdr-cat-btn px-4 py-1.5 rounded-full text-xs font-semibold bg-white text-black shadow-md shadow-white/10';
+                } else {
+                    btn.className = 'hdr-cat-btn px-4 py-1.5 rounded-full text-xs font-semibold text-zinc-400 hover:text-white';
+                }
+            });
+
+            document.querySelectorAll('.cat-btn').forEach(btn => {
+                if(btn.innerText.includes(cat) || (cat === 'Cartoons' && btn.innerText.includes('Animation'))) {
+                    btn.className = 'cat-btn active px-4 py-1.5 rounded-full text-xs font-medium shrink-0 bg-white text-black shadow-md shadow-white/10';
+                } else {
+                    btn.className = 'cat-btn px-4 py-1.5 rounded-full text-xs font-medium shrink-0 bg-surface-100 hover:bg-surface-200 text-zinc-300 border border-white/10';
+                }
+            });
+
+            const catTitles = { 'All': 'All Titles', 'Movies': 'Movies', 'Series': 'Series', 'Cartoons': 'Animation' };
+            document.getElementById('section-title').innerHTML = `<span class="w-1.5 h-5 bg-white rounded-full"></span> ${catTitles[cat] || cat}`;
+
+            renderGrid(true);
+        }
+
+        const debouncedSearch = debounce((val) => {
+            STATE.searchQuery = val;
+            const clearBtn = document.getElementById('main-clear');
+            if(val.trim() !== '') {
+                clearBtn.classList.remove('opacity-0', 'pointer-events-none');
+            } else {
+                clearBtn.classList.add('opacity-0', 'pointer-events-none');
+            }
+            renderGrid(true);
+        }, 150);
+
+        function clearSearch() {
+            document.getElementById('main-search').value = '';
+            debouncedSearch('');
+        }
+
+        function resetView() {
+            clearSearch();
+            STATE.items = shuffleArray(ALL_MEDIA_SOURCE);
+            STATE.featuredItems = shuffleArray(ALL_MEDIA_SOURCE).slice(0, 5);
+            STATE.hotItems = shuffleArray(ALL_MEDIA_SOURCE.filter(i => i.isHot));
+            initHeroSlider();
+            filterCategory('All');
+            document.getElementById('main-container').scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        /* --- Player Controller --- */
+        let hlsInstance = null;
+        let streamTimeout = null;
+
+        function showStatusOverlay() {
+            const overlay = document.getElementById('video-status-overlay');
+            if (overlay) {
+                overlay.style.display = 'flex';
+                overlay.style.opacity = '1';
+            }
+        }
+
+        function hideStatusOverlay() {
+            const overlay = document.getElementById('video-status-overlay');
+            if (overlay) {
+                overlay.style.opacity = '0';
+                setTimeout(() => {
+                    overlay.style.display = 'none';
+                }, 500);
+            }
+        }
+
+        function openVideo(id) {
+            const item = STATE.items.find(i => i.id === id);
+            if(!item) return;
+
+            document.getElementById('vm-title').innerText = item.title;
+            const modal = document.getElementById('video-modal');
+            modal.classList.add('active');
+
+            const epList = document.getElementById('vm-episodes');
+            const epCount = document.getElementById('vm-count');
+
+            renderEpisodesSkeleton(item.episodes ? item.episodes.length : 1);
+
+            setTimeout(() => {
+                if(item.episodes && item.episodes.length > 0) {
+                    epCount.innerText = `${item.episodes.length} Episodes`;
+                    epList.innerHTML = item.episodes.map((ep) => `
+                        <button onclick="playEpisode('${ep.url}', this)" class="ep-btn w-full p-3 bg-surface-100 hover:bg-surface-200 border border-white/5 rounded-xl text-left text-xs sm:text-sm font-medium text-zinc-200 transition-all duration-300 flex items-center justify-between group active:scale-[0.98] animate-fade-in">
+                            <span class="truncate pr-2">${ep.name}</span>
+                            <svg class="w-4 h-4 text-zinc-500 group-hover:text-white transition-colors duration-300 shrink-0" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                        </button>
+                    `).join('');
+                    playEpisode(item.episodes[0].url, epList.firstElementChild);
+                } else {
+                    epCount.innerText = "1 Episode";
+                    epList.innerHTML = `
+                        <button onclick="playEpisode('${item.url}', this)" class="ep-btn w-full p-3 bg-surface-100 hover:bg-surface-200 border border-white/5 rounded-xl text-left text-xs sm:text-sm font-medium text-zinc-200 transition-all duration-300 flex items-center justify-between group active:scale-[0.98] animate-fade-in">
+                            <span class="truncate pr-2">${item.title}</span>
+                            <svg class="w-4 h-4 text-zinc-500 group-hover:text-white transition-colors duration-300 shrink-0" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                        </button>
+                    `;
+                    playEpisode(item.url, epList.firstElementChild);
+                }
+            }, 300);
+        }
+
+        function playEpisode(url, btnElement) {
+            STATE.currentPlayingUrl = url;
+
+            document.querySelectorAll('.ep-btn').forEach(btn => {
+                btn.className = 'ep-btn w-full p-3 bg-surface-100 hover:bg-surface-200 border border-white/5 rounded-xl text-left text-xs sm:text-sm font-medium text-zinc-300 transition-all duration-300 flex items-center justify-between group active:scale-[0.98]';
+            });
+            if(btnElement) {
+                btnElement.className = 'ep-btn w-full p-3 bg-white/10 border-white/30 text-white font-semibold rounded-xl text-left text-xs sm:text-sm transition-all duration-300 flex items-center justify-between group shadow-lg active:scale-[0.98]';
+            }
+
+            const ytContainer = document.getElementById('yt-player-container');
+            const stdPlayer = document.getElementById('std-player');
+            
+            showStatusOverlay();
+
+            if (streamTimeout) clearTimeout(streamTimeout);
+            if (hlsInstance) {
+                hlsInstance.destroy();
+                hlsInstance = null;
+            }
+
+            if(url.includes('youtube.com') || url.includes('youtu.be')) {
+                stdPlayer.classList.add('hidden');
+                stdPlayer.pause();
+                ytContainer.classList.remove('hidden');
+                
+                let videoId = '';
+                if (url.includes('youtu.be')) {
+                    videoId = url.split('youtu.be/')[1].split('?')[0];
+                } else if (url.includes('youtube.com')) {
+                    videoId = url.split('v=')[1].split('&')[0];
+                }
+
+                ytContainer.innerHTML = `<iframe class="w-full h-full border-0" src="https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0" allow="autoplay; encrypted-media" allowfullscreen onload="hideStatusOverlay()"></iframe>`;
+                
+                streamTimeout = setTimeout(() => {
+                    hideStatusOverlay();
+                }, 1500);
+
+            } else {
+                ytContainer.classList.add('hidden');
+                ytContainer.innerHTML = '';
+                stdPlayer.classList.remove('hidden');
+
+                const handlePlaying = () => {
+                    hideStatusOverlay();
+                    stdPlayer.removeEventListener('playing', handlePlaying);
+                    stdPlayer.removeEventListener('loadeddata', handlePlaying);
+                };
+
+                stdPlayer.addEventListener('playing', handlePlaying);
+                stdPlayer.addEventListener('loadeddata', handlePlaying);
+
+                if (url.includes('.m3u8') && Hls.isSupported()) {
+                    hlsInstance = new Hls({ enableWorker: true });
+                    hlsInstance.loadSource(url);
+                    hlsInstance.attachMedia(stdPlayer);
+                    
+                    hlsInstance.on(Hls.Events.MANIFEST_PARSED, function() {
+                        stdPlayer.play().catch(() => {});
+                    });
+
+                    hlsInstance.on(Hls.Events.ERROR, function(event, data) {
+                        if (data.fatal) {
+                            showStatusOverlay();
+                        }
+                    });
+                } else {
+                    stdPlayer.src = url;
+                    stdPlayer.play().catch(() => {});
+                }
+
+                stdPlayer.onerror = () => {
+                    showStatusOverlay();
+                };
+
+                streamTimeout = setTimeout(() => {
+                    if (stdPlayer.paused || stdPlayer.readyState < 2) {
+                        showStatusOverlay();
+                    }
+                }, 8000);
+            }
+        }
+
+        function closeVideo() {
+            const modal = document.getElementById('video-modal');
+            modal.classList.remove('active');
+
+            if (streamTimeout) clearTimeout(streamTimeout);
+            
+            setTimeout(() => {
+                document.getElementById('yt-player-container').innerHTML = '';
+                const stdPlayer = document.getElementById('std-player');
+                stdPlayer.pause();
+                stdPlayer.src = '';
+
+                if (hlsInstance) {
+                    hlsInstance.destroy();
+                    hlsInstance = null;
+                }
+            }, 400);
+        }
+
+        window.onload = () => {
+            renderHeroSkeleton();
+            renderGridSkeleton();
+
+            setTimeout(() => {
+                initHeroSlider();
+                renderGrid();
+                STATE.isLoading = false;
+            }, 500);
+        };
+    </script>
+</body>
+</html>
