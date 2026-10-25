@@ -1,0 +1,142 @@
+:root { 
+    --primary: #FFFFFF; 
+    --primary-hover: #E4E4E7;
+    --bg-dark: #000000;
+    --ease-out-smooth: cubic-bezier(0.25, 1, 0.5, 1);
+    --ease-in-out-smooth: cubic-bezier(0.65, 0, 0.35, 1);
+    --spring-smooth: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+* {
+    -webkit-tap-highlight-color: transparent;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body { 
+    background-color: var(--bg-dark); 
+    color: #ffffff; 
+    overflow: hidden; 
+    user-select: none; 
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    font-family: 'Plus Jakarta Sans', 'Prompt', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+} 
+
+img { 
+    -webkit-user-drag: none; 
+    user-drag: none; 
+    pointer-events: none; 
+} 
+
+/* Ultra-Smooth Custom Scrollbar */
+.custom-scrollbar::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 9999px;
+    transition: background 0.4s var(--ease-out-smooth);
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.35);
+}
+
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* Smooth Glass Panels */
+.glass-panel {
+    background: rgba(12, 12, 12, 0.82);
+    backdrop-filter: blur(24px) saturate(180%);
+    -webkit-backdrop-filter: blur(24px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
+    transition: border-color 0.4s var(--ease-out-smooth), box-shadow 0.4s var(--ease-out-smooth);
+}
+
+.glass-header {
+    background: rgba(0, 0, 0, 0.75);
+    backdrop-filter: blur(30px) saturate(200%);
+    -webkit-backdrop-filter: blur(30px) saturate(200%);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    transition: background-color 0.5s var(--ease-out-smooth), border-color 0.5s var(--ease-out-smooth);
+}
+
+/* Enhanced Card Hover (Soft & Fluid) */
+.card-hover {
+    transition: transform 0.4s var(--ease-out-smooth), box-shadow 0.4s var(--ease-out-smooth), border-color 0.4s var(--ease-out-smooth);
+    will-change: transform;
+}
+.card-hover:hover {
+    transform: translateY(-4px);
+    border-color: rgba(255, 255, 255, 0.25) !important;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6);
+}
+.card-hover:active {
+    transform: scale(0.98);
+    transition: transform 0.1s ease;
+}
+
+/* Silky Smooth Hero Slider Transitions */
+.slide-item {
+    transition: opacity 1.2s var(--ease-out-smooth), transform 1.2s var(--ease-out-smooth);
+    will-change: opacity, transform;
+    transform: scale(1.02);
+}
+.slide-item.opacity-100 {
+    transform: scale(1);
+}
+
+/* Smooth Modal Display with Gentle Fade & Scale */
+.modal-animated {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.4s var(--ease-out-smooth), visibility 0.4s var(--ease-out-smooth);
+}
+.modal-animated.active {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+}
+
+/* Dynamic Navigation Buttons */
+.hdr-cat-btn, .cat-btn {
+    transition: all 0.3s var(--ease-out-smooth);
+}
+
+/* Smooth Swipe Target */
+.swipe-target {
+    touch-action: pan-y;
+}
+
+/* Shimmer Loading Effect */
+@keyframes skeleton-shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+}
+
+.skeleton-shimmer {
+    background: linear-gradient(
+        90deg, 
+        rgba(255, 255, 255, 0.03) 25%, 
+        rgba(255, 255, 255, 0.09) 50%, 
+        rgba(255, 255, 255, 0.03) 75%
+    );
+    background-size: 200% 100%;
+    animation: skeleton-shimmer 2s infinite ease-in-out;
+}
+
+.pb-safe { padding-bottom: calc(env(safe-area-inset-bottom, 20px) + 20px); }
+.pt-safe { padding-top: env(safe-area-inset-top, 0px); }
