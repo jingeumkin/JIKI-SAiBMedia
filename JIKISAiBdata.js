@@ -15,7 +15,7 @@ const ALL_MEDIA_SOURCE = [
     isHot: true, 
     hotBadge: "TOP 6", 
     cover: "https://imgs.search.brave.com/CMqC42P4io4I_cEE2JsYGcZEHdlRrKB1IC62DZ4rilM/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9tLm1l/ZGlhLWFtYXpvbi5j/b20vaW1hZ2VzL00v/TVY1Qk5UQXdObVJp/WWpRdE5XWTVaaTAw/WW1ZeExUaG1PR1l0/T1RVd1pUY3hOamMz/WmpVeVhrRXlYa0Zx/Y0djQC5qcGc", 
-    url: "https://dl.dropbox.com/scl/fi/hgcx73tyh84qsi4b36r0j/Kung-Fu-Panda-2008-_-Hmoob-Movies-and-Drama-on-Patreon_High.mp4?rlkey=uj6cm2cb6dhxp48pyv1axg8ql&st=attlsm4r&dl=0" 
+    url: "https://uccc9bc56448949d142c20ef5d38.previews.dropboxusercontent.com/p/hls_playlist/ADJrn0XdrdVzj9Yl3VNlhQALuiySQ5S3j5i10UOUCyIYcQAuri4qE15upBBm1173nze3UQ3OV53q5srV-uBsdGSGyAG-sn9XIgVukbhEnZw3W7CbSCJ8xf8Tv3_dE4dGSx5JAdEBJLihWh_mVI7CQyKcsu8g1Dvv4YFeQ8kN-IlRlVRPczeB1IdwE3N3EyRDT4x4z273dwnLO6bMSLSEOSaCil2W94QQZNeEicjlY3fZd4KLOqqe-hAhE1dwCZ28I8mgogOD5YXZLm5sKg_-U1JtxuqI_PBIOd-pz1edces63ecE8_9U8sgrx5huw-KIv12Kry9rL8Lug2mZzJK8pL03M_6XymquP__ZXWFQsBEf_jQsK-JbH1RY6-nFEAuX9p9BZ56s0N8uINKCb9m9BIBt/p.m3u8?bps=128000&type=audio" 
   },
   { 
     id: 82, 
